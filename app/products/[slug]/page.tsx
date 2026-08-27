@@ -1,2 +1,72 @@
-import {notFound} from 'next/navigation'; import Header from '../../components/Header'; import {products} from '../../data';
-export default async function Product({params}:{params:Promise<{slug:string}>}){const{slug}=await params;const p=products.find(x=>x.slug===slug);if(!p)notFound();return <main><Header light/><section className="product-page"><div className="product-gallery"><img src={p.image} alt={p.name}/><div className="detail-chip">Responsibly made · 14k gold</div></div><div className="product-info"><p className="section-kicker">{p.category} · New</p><h1>{p.name}</h1><p className="price">{p.price}</p><p className="product-description">{p.detail} Hand-finished in our New York studio and delivered in our signature keepsake box.</p><div className="specs"><p><span>Material</span>14k solid yellow gold</p><p><span>Stone</span>Conflict-free lab-grown diamond</p><p><span>Delivery</span>Complimentary insured shipping</p></div><button className="add-button">Add to bag <span>{p.price}</span></button><p className="afterpay">Pay in 4 interest-free installments. No hidden fees.</p></div></section></main>}
+import type {Metadata} from 'next';
+import Link from 'next/link';
+import {notFound} from 'next/navigation';
+import Header from '../../components/Header';
+import ProductCard from '../../components/ProductCard';
+import {products} from '../../data';
+
+type ProductPageProps = {params: Promise<{slug: string}>};
+
+export async function generateMetadata({params}: ProductPageProps): Promise<Metadata> {
+  const {slug} = await params;
+  const product = products.find((item) => item.slug === slug);
+  if (!product) return {};
+  return {
+    title: `${product.name} | Aloura Fine Jewelry`,
+    description: product.detail,
+    openGraph: {title: product.name, description: product.detail, images: [{url: product.image, alt: product.name}]},
+    twitter: {card: 'summary_large_image', title: product.name, description: product.detail, images: [product.image]},
+  };
+}
+
+export default async function Product({params}: ProductPageProps) {
+  const {slug} = await params;
+  const product = products.find((item) => item.slug === slug);
+  if (!product) notFound();
+  const related = products.filter((item) => item.slug !== product.slug && (item.collection === product.collection || item.category === product.category)).slice(0, 4);
+
+  return <main>
+    <Header light/>
+    <nav className="product-breadcrumb" aria-label="Breadcrumb"><Link href="/">Home</Link><span>/</span><Link href="/collections">{product.category}</Link><span>/</span><span aria-current="page">{product.name}</span></nav>
+    <section className="product-detail-shell">
+      <div className="product-gallery-grid" aria-label={`${product.name} gallery`}>
+        {product.gallery.map((image, index) => <figure className={index === 0 ? 'product-gallery-main' : ''} key={image.src}>
+          <img src={image.src} alt={image.alt} loading={index === 0 ? 'eager' : 'lazy'}/>
+          {index === 0 && <figcaption>Responsibly made · Recycled 14k gold</figcaption>}
+        </figure>)}
+      </div>
+      <aside className="product-purchase" aria-labelledby="product-title">
+        <p className="section-kicker">The {product.collection} collection · {product.category}</p>
+        <h1 id="product-title">{product.name}</h1>
+        <div className="product-price-row"><p className="price">{product.price}</p><p>Taxes calculated at checkout</p></div>
+        <p className="product-lede">{product.detail}</p>
+        <p className="product-story">{product.story}</p>
+        {product.sizes && <div className="product-size-field">
+          <div><label htmlFor="product-size">Ring size</label><a href="#size-guide">Size guide</a></div>
+          <select id="product-size" name="size" defaultValue=""><option value="" disabled>Select your size</option>{product.sizes.map((size) => <option value={size} key={size}>{size}</option>)}</select>
+        </div>}
+        <button className="add-button" type="button"><span>Add to bag</span><span>{product.price}</span></button>
+        <p className="afterpay">Or four interest-free payments. Complimentary insured U.S. delivery.</p>
+        <div className="purchase-assurances" aria-label="Purchase assurances">
+          <div><strong>Ready to ship</strong><span>Leaves our studio in 1–2 business days</span></div>
+          <div><strong>30-day returns</strong><span>Complimentary and insured</span></div>
+          <div><strong>Lifetime care</strong><span>Cleaning and inspection included</span></div>
+        </div>
+        <div className="product-accordions">
+          <details open><summary>Product details</summary><dl>
+            <div><dt>Item</dt><dd>{product.itemNumber}</dd></div><div><dt>Material</dt><dd>{product.material}</dd></div><div><dt>Stone</dt><dd>{product.stone}</dd></div><div><dt>Setting / finish</dt><dd>{product.stoneDetails}</dd></div><div><dt>Dimensions</dt><dd>{product.dimensions}</dd></div><div><dt>Weight</dt><dd>{product.weight}</dd></div><div><dt>Fit</dt><dd>{product.fit}</dd></div>
+          </dl></details>
+          <details><summary>Shipping & returns</summary><p>Complimentary insured delivery within the U.S. Signature is required. Unworn pieces may be returned in their original condition within 30 days of delivery.</p></details>
+          <details><summary>Care & warranty</summary><p>Covered by Aloura lifetime care for manufacturing defects, with complimentary annual cleaning and inspection. Store separately and avoid direct contact with fragrance, chlorine, and abrasive surfaces.</p></details>
+          <details id="size-guide"><summary>Size & fit guidance</summary><p>{product.category === 'Rings' ? 'Measure at the end of the day when hands are warm. If you fall between sizes, choose the larger half size. Our team can help confirm your fit before dispatch.' : 'Designed for a comfortable everyday fit. Contact our jewelry specialists if you would like help assessing scale or length.'}</p></details>
+        </div>
+      </aside>
+    </section>
+    <section className="product-craft-story">
+      <div><p className="section-kicker">Made with intention</p><h2>Considered from every angle.</h2><p>Each Aloura piece is made in small batches from recycled solid gold and set by hand. Our stones are individually inspected for proportion, color, and light performance before they reach the bench.</p><Link href="/collections" className="text-link">Discover our materials →</Link></div>
+      <img src="https://images.unsplash.com/photo-1596944924616-7b38e7cfac36?auto=format&fit=crop&w=1400&q=88" alt="Jeweler hand-finishing a gold piece at the bench" loading="lazy"/>
+    </section>
+    {related.length > 0 && <section className="product-related" aria-labelledby="related-title"><div className="compact-heading"><div><p className="section-kicker">Wear it with</p><h2 id="related-title">Complete the story.</h2></div><Link href="/collections">Shop all pieces →</Link></div><div className="product-grid">{related.map((item, index) => <ProductCard product={item} index={index} key={item.slug}/>)}</div></section>}
+    <section className="service-row refined-services"><div><span>01</span><h3>Complimentary shipping</h3><p>Insured U.S. delivery and 30-day returns.</p></div><div><span>02</span><h3>Lifetime care</h3><p>Cleaning, inspection, and repair support.</p></div><div><span>03</span><h3>Thoughtfully sourced</h3><p>Recycled gold and responsibly grown stones.</p></div><div><span>04</span><h3>Always personal</h3><p>Real guidance from our jewelry specialists.</p></div></section>
+  </main>;
+}
