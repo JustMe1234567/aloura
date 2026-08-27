@@ -1,0 +1,2 @@
+import Link from 'next/link'; import type {products} from '../data';
+export default function ProductCard({product,index}: {product:(typeof products)[number],index:number}){return <article className="product-card"><Link href={`/products/${product.slug}`}><div className="product-image"><img src={product.image} alt={product.name} loading={index>1?'lazy':'eager'}/><span className="quick-view">View piece</span></div><div className="product-meta"><div><p>{product.category}</p><h3>{product.name}</h3></div><span>{product.price}</span></div></Link></article>}
