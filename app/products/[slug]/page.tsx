@@ -4,6 +4,7 @@ import {notFound} from 'next/navigation';
 import Header from '../../components/Header';
 import ProductCard from '../../components/ProductCard';
 import {products} from '../../data';
+import {AddToBag} from '../../components/AddToBag';
 
 type ProductPageProps = {params: Promise<{slug: string}>};
 
@@ -27,7 +28,7 @@ export default async function Product({params}: ProductPageProps) {
 
   return <main>
     <Header light/>
-    <nav className="product-breadcrumb" aria-label="Breadcrumb"><Link href="/">Home</Link><span>/</span><Link href="/collections">{product.category}</Link><span>/</span><span aria-current="page">{product.name}</span></nav>
+    <nav className="product-breadcrumb" aria-label="Breadcrumb"><Link href="/">Home</Link><span>/</span><Link href={`/shop/${product.category.toLowerCase()}`}>{product.category}</Link><span>/</span><span aria-current="page">{product.name}</span></nav>
     <section className="product-detail-shell">
       <div className="product-gallery-grid" aria-label={`${product.name} gallery`}>
         {product.gallery.map((image, index) => <figure className={index === 0 ? 'product-gallery-main' : ''} key={image.src}>
@@ -41,11 +42,7 @@ export default async function Product({params}: ProductPageProps) {
         <div className="product-price-row"><p className="price">{product.price}</p><p>Taxes calculated at checkout</p></div>
         <p className="product-lede">{product.detail}</p>
         <p className="product-story">{product.story}</p>
-        {product.sizes && <div className="product-size-field">
-          <div><label htmlFor="product-size">Ring size</label><a href="#size-guide">Size guide</a></div>
-          <select id="product-size" name="size" defaultValue=""><option value="" disabled>Select your size</option>{product.sizes.map((size) => <option value={size} key={size}>{size}</option>)}</select>
-        </div>}
-        <button className="add-button" type="button"><span>Add to bag</span><span>{product.price}</span></button>
+        <AddToBag product={{slug: product.slug, name: product.name, price: product.price, image: product.image}} sizes={product.sizes}/>
         <p className="afterpay">Or four interest-free payments. Complimentary insured U.S. delivery.</p>
         <div className="purchase-assurances" aria-label="Purchase assurances">
           <div><strong>Ready to ship</strong><span>Leaves our studio in 1–2 business days</span></div>
@@ -63,10 +60,10 @@ export default async function Product({params}: ProductPageProps) {
       </aside>
     </section>
     <section className="product-craft-story">
-      <div><p className="section-kicker">Made with intention</p><h2>Considered from every angle.</h2><p>Each Aloura piece is made in small batches from recycled solid gold and set by hand. Our stones are individually inspected for proportion, color, and light performance before they reach the bench.</p><Link href="/collections" className="text-link">Discover our materials →</Link></div>
+      <div><p className="section-kicker">Made with intention</p><h2>Considered from every angle.</h2><p>Each Aloura piece is made in small batches from recycled solid gold and set by hand. Our stones are individually inspected for proportion, color, and light performance before they reach the bench.</p><Link href="/#materials" className="text-link">Discover our materials →</Link></div>
       <img src="https://images.unsplash.com/photo-1596944924616-7b38e7cfac36?auto=format&fit=crop&w=1400&q=88" alt="Jeweler hand-finishing a gold piece at the bench" loading="lazy"/>
     </section>
-    {related.length > 0 && <section className="product-related" aria-labelledby="related-title"><div className="compact-heading"><div><p className="section-kicker">Wear it with</p><h2 id="related-title">Complete the story.</h2></div><Link href="/collections">Shop all pieces →</Link></div><div className="product-grid">{related.map((item, index) => <ProductCard product={item} index={index} key={item.slug}/>)}</div></section>}
+    {related.length > 0 && <section className="product-related" aria-labelledby="related-title"><div className="compact-heading"><div><p className="section-kicker">Wear it with</p><h2 id="related-title">Complete the story.</h2></div><Link href="/shop">Shop all pieces →</Link></div><div className="product-grid">{related.map((item, index) => <ProductCard product={item} index={index} key={item.slug}/>)}</div></section>}
     <section className="service-row refined-services"><div><span>01</span><h3>Complimentary shipping</h3><p>Insured U.S. delivery and 30-day returns.</p></div><div><span>02</span><h3>Lifetime care</h3><p>Cleaning, inspection, and repair support.</p></div><div><span>03</span><h3>Thoughtfully sourced</h3><p>Recycled gold and responsibly grown stones.</p></div><div><span>04</span><h3>Always personal</h3><p>Real guidance from our jewelry specialists.</p></div></section>
   </main>;
 }

@@ -27,7 +27,7 @@ export default function Home() {
 
     <section className="collection-index" aria-labelledby="collection-index-title">
       <header><p className="section-kicker">Three signatures</p><h2 id="collection-index-title">A study in form.</h2></header>
-      <div className="collection-index-list">{collections.map((collection) => <Link href={`/collections?collection=${collection.name.toLowerCase()}`} className="collection-index-row" key={collection.name}>
+      <div className="collection-index-list">{collections.map((collection) => <Link href={`/collections/${collection.name.toLowerCase()}`} className="collection-index-row" key={collection.name}>
         <span className="collection-number">{collection.number}</span>
         <div className="collection-thumb"><img src={collection.image} alt="" loading="lazy"/></div>
         <h3>{collection.name}</h3>
@@ -43,21 +43,21 @@ export default function Home() {
 
     <section className="shop-by-type" aria-labelledby="shop-type-title">
       <div className="shop-type-intro"><p className="section-kicker">Find your piece</p><h2 id="shop-type-title">The everyday<br/><em>jewelry wardrobe.</em></h2></div>
-      <nav aria-label="Shop by jewelry type">{categories.map((category, index) => <Link href="/collections" key={category}><span>{String(index + 1).padStart(2, '0')}</span><strong>{category}</strong><i aria-hidden="true">→</i></Link>)}</nav>
+      <nav aria-label="Shop by jewelry type">{categories.map((category, index) => <Link href={`/shop/${category.toLowerCase()}`} key={category}><span>{String(index + 1).padStart(2, '0')}</span><strong>{category}</strong><i aria-hidden="true">→</i></Link>)}</nav>
     </section>
 
     <section className="featured new-edit" aria-labelledby="new-edit-title">
-      <div className="new-edit-heading"><div><p className="section-kicker">Objects to live in</p><h2 id="new-edit-title">The new edit.</h2></div><p>Six considered forms. Each one designed to gather meaning with wear.</p><Link href="/collections" className="text-link">View all pieces <span aria-hidden="true">→</span></Link></div>
+      <div className="new-edit-heading"><div><p className="section-kicker">Objects to live in</p><h2 id="new-edit-title">The new edit.</h2></div><p>Six considered forms. Each one designed to gather meaning with wear.</p><Link href="/shop" className="text-link">View all pieces <span aria-hidden="true">→</span></Link></div>
       <div className="product-grid editorial-product-grid">{products.map((product, index) => <ProductCard key={product.slug} product={product} index={index}/>)}</div>
     </section>
 
     <section className="portrait-story" id="story">
       <div className="portrait-image"><img src="https://images.unsplash.com/photo-1619119069152-a2b331eb392a?auto=format&fit=crop&w=1800&q=90" alt="Woman wearing a fine gold necklace in natural light" loading="lazy"/></div>
-      <div className="portrait-copy"><p className="section-kicker">Worn, not styled</p><blockquote>“The pieces I keep are the ones that remember with me.”</blockquote><p>Inside the private rituals, accidental combinations, and quiet confidence that make jewelry personal.</p><Link href="/collections" className="text-link">Read the portrait <span aria-hidden="true">↗</span></Link></div>
+      <div className="portrait-copy"><p className="section-kicker">Worn, not styled</p><blockquote>“The pieces I keep are the ones that remember with me.”</blockquote><p>Inside the private rituals, accidental combinations, and quiet confidence that make jewelry personal.</p><Link href="/shop/necklaces" className="text-link">Shop her edit <span aria-hidden="true">↗</span></Link></div>
     </section>
 
-    <section className="material-note">
-      <p className="section-kicker">Our standard</p><h2>Precious materials.<br/><em>Plainly spoken.</em></h2><div><p>Recycled solid gold. Responsibly grown stones. Fixed specifications and honest prices, presented without the theater.</p><Link href="/collections" className="boxed-cta light">How we make Aloura</Link></div>
+    <section className="material-note" id="materials">
+      <p className="section-kicker">Our standard</p><h2>Precious materials.<br/><em>Plainly spoken.</em></h2><div><p>Recycled solid gold. Responsibly grown stones. Fixed specifications and honest prices, presented without the theater.</p><Link href="/collections/solis" className="boxed-cta light">Explore the craftsmanship</Link></div>
     </section>
 
     <section className="service-row refined-services"><div><span>01</span><h3>Complimentary shipping</h3><p>Insured U.S. delivery and 30-day returns.</p></div><div><span>02</span><h3>Lifetime care</h3><p>Cleaning, inspection, and repair support.</p></div><div><span>03</span><h3>Thoughtfully sourced</h3><p>Recycled gold and responsibly grown stones.</p></div><div><span>04</span><h3>Always personal</h3><p>Real guidance from our jewelry specialists.</p></div></section>

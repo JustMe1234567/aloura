@@ -11,7 +11,7 @@ const slides = [
     copy: 'Sculptural solid gold pieces made to catch the light, every day.',
     image: 'https://images.unsplash.com/photo-1605100804763-247f67b3557e?auto=format&fit=crop&w=2200&q=92',
     alt: 'Sculptural diamond ring from the Solis collection',
-    href: '/collections?collection=solis',
+    href: '/collections/solis',
   },
   {
     name: 'Muse',
@@ -20,7 +20,7 @@ const slides = [
     copy: 'Expressive forms designed to be layered, lived in, and made your own.',
     image: 'https://images.unsplash.com/photo-1611652022419-a9419f74343d?auto=format&fit=crop&w=2200&q=92',
     alt: 'Expressive gold jewelry from the Muse collection',
-    href: '/collections?collection=muse',
+    href: '/collections/muse',
   },
   {
     name: 'Luna',
@@ -29,7 +29,7 @@ const slides = [
     copy: 'Luminous fine jewelry with a quiet glow and an effortless presence.',
     image: 'https://images.unsplash.com/photo-1635767798638-3e25273a8236?auto=format&fit=crop&w=2200&q=92',
     alt: 'Luminous fine jewelry from the Luna collection',
-    href: '/collections?collection=luna',
+    href: '/collections/luna',
   },
 ] as const;
 
